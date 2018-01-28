@@ -1,24 +1,59 @@
 package LabN3;
 
+import java.io.*;
+import java.util.HashMap;
+
 public class CurrencyConverter
 {
-    // Data fra fil lagres i en hashmap/liste/array
+    private HashMap<String, Float> currencies;
 
     public CurrencyConverter(String fileName)
     {
-        // Laster inn all data fra fil og legger det i klasse variablene
+        this.currencies = new HashMap<>();
+        this.currencies.put("NOK", 1.0f);
+
+        try
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName)));
+
+            // Skips the two top row
+            reader.readLine();
+            reader.readLine();
+
+            String line;
+            while((line = reader.readLine()) != null)
+            {
+                String[] elements = line.split(",");
+
+                String fromCurrency = elements[2];
+                float fromAmount = Float.parseFloat(elements[1]);
+                float amountInNOK = Float.parseFloat(elements[9]);
+
+                if(fromAmount != 1.0f)
+                    amountInNOK /= fromAmount;
+
+                currencies.put(fromCurrency, amountInNOK);
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public float getRate(String from, String to)
     {
-        // Konvereterer valutaen, eks. 1 USD = ? EUR
-        // Kan evetuelt ta inn mengden from også og returnere den ferdige verdien
-        return 0;
+        float fromCurrency = currencies.get(from);
+        float toCurrency = currencies.get(to);
+        return fromCurrency / toCurrency;
     }
 
     public boolean isSupported(String currency)
     {
-        // Søker etter currencyen i listen og returner true hvis den finnes
-        return true;
+        return currencies.get(currency) != null;
     }
 }

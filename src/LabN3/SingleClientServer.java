@@ -10,12 +10,12 @@ import java.net.Socket;
 public class SingleClientServer
 {
     private static int serverPort = 25565;
-    private CurrencyConverter coverter;
+    private CurrencyConverter converter;
     private QueryParser parser;
 
     public SingleClientServer()
     {
-        this.coverter = new CurrencyConverter("filMedMasseGreier.csv");
+        this.converter = new CurrencyConverter("kursliste.csv");
         this.parser = new QueryParser();
         runServer();
     }
@@ -27,7 +27,7 @@ public class SingleClientServer
             ServerSocket serverSocket = new ServerSocket(serverPort);
             Socket socket = serverSocket.accept();
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         ) {
             System.out.println("Currency Converter server is running!");
 
@@ -37,21 +37,28 @@ public class SingleClientServer
 
                 if(isValid)
                 {
-                    // Henter data fra parser
-                    // Henter "exchange-rate" fra converter med dataen fra parser
-                    // Regner ut mengden i ny valuta
-                    // Bygger returstreng
-                    // Sender returstreng til client
+                    String fromCurrency = parser.getFromCurrency();
+                    String toCurrency = parser.getToCurrency();
+                    float amount = parser.getFromAmount();
+
+                    if(converter.isSupported(fromCurrency) && converter.isSupported(toCurrency))
+                    {
+                        float rate = converter.getRate(fromCurrency, toCurrency);
+                        float value = rate * amount;
+                        String respons = String.format("%.4f", amount) + " " + fromCurrency + " = "
+                                + String.format("%.4f", value) + " " + toCurrency;
+                        System.out.println(respons);
+                        out.println(respons);
+                    }
+                    else out.println("One or both currencies are not supported!");
                 }
-                else
-                {
-                    // Send feilmelding til client
-                }
+                else out.println("Unrecognizable or invalid query!’");
             }
         }
         catch (IOException e)
         {
-            // Skriver ut feilmelding
+            e.printStackTrace();
+            System.err.println("Noe gikk alvorlig galt!! :(");
         }
     }
 

@@ -2,20 +2,30 @@ package LabN3;
 
 public class QueryParser
 {
+    private float fromAmount;
     private String fromCurrency;
     private String toCurrency;
-    private float fromAmount;
 
-    public QueryParser()
-    {
-
-    }
-
+    // Defined format: AMOUNT,FROM,TO
+    // Example: 500,USD,NOK
     public boolean parse(String query)
     {
-        // Bryter opp strengen, formaterer elementene og legger dataen inn i klasse variablene
-        // returnerer true/false avhengig av om det er en godkjent query
-        return true;
+        String[] elements = query.split(",");
+
+        if(elements.length != 3)
+            return false;
+
+        try
+        {
+            this.fromAmount = Float.parseFloat(elements[0]);
+            this.fromCurrency = elements[1];
+            this.toCurrency = elements[2];
+            return true;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
     }
 
     public String getFromCurrency()
