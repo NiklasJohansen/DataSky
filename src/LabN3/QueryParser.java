@@ -10,6 +10,7 @@ public class QueryParser
     // Example: 500,USD,NOK
     public boolean parse(String query)
     {
+        query = query.toUpperCase();
         String[] elements = query.split(",");
 
         if(elements.length != 3)
