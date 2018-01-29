@@ -25,14 +25,14 @@ public class CurrencyConverter
             {
                 String[] elements = line.split(",");
 
-                String fromCurrency = elements[2];
-                float fromAmount = Float.parseFloat(elements[1]);
+                String currency = elements[2];
+                float amount = Float.parseFloat(elements[1]);
                 float amountInNOK = Float.parseFloat(elements[9]);
 
-                if(fromAmount != 1.0f)
-                    amountInNOK /= fromAmount;
+                if(amount != 1.0f)
+                    amountInNOK /= amount;
 
-                currencies.put(fromCurrency, amountInNOK);
+                currencies.put(currency, amountInNOK);
             }
         }
         catch (FileNotFoundException e)
