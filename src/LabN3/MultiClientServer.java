@@ -68,11 +68,13 @@ public class MultiClientServer
             ) {
                 for(String query; (query = in.readLine()) != null;)
                 {
-                    System.out.println("Client [" + address + "]: " + query);
+                    System.out.println("Client [" + address + "] > " + query);
 
-                    boolean isValid = parser.parse(query);
-
-                    if(isValid)
+                    if(query.equals("curr"))
+                    {
+                        send(out, converter.getAllCurrencies());
+                    }
+                    else if(parser.parse(query))
                     {
                         String fromCurrency = parser.getFromCurrency();
                         String toCurrency = parser.getToCurrency();
@@ -88,7 +90,7 @@ public class MultiClientServer
                         }
                         else send(out, "One or both currencies are not supported!");
                     }
-                    else send(out, "Unrecognizable or invalid query!’");
+                    else send(out, "Unrecognizable or invalid query!");
                 }
 
                 socket.close();
@@ -102,7 +104,7 @@ public class MultiClientServer
         private void send(PrintWriter pw, String msg)
         {
             pw.println(msg);
-            System.out.println("Server: [" + socket.getLocalAddress().getHostAddress() + "]: " + msg);
+            System.out.println("Server [" + socket.getLocalAddress().getHostAddress() + "] > " + msg);
         }
     }
 }

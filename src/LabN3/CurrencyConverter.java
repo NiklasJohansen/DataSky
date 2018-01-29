@@ -1,6 +1,7 @@
 package LabN3;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class CurrencyConverter
@@ -56,4 +57,10 @@ public class CurrencyConverter
     {
         return currencies.get(currency) != null;
     }
+
+    public String getAllCurrencies()
+    {
+        return Arrays.toString(currencies.keySet().toArray());
+    }
+
 }
