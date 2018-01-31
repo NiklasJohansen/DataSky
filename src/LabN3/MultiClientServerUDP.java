@@ -26,7 +26,7 @@ public class MultiClientServerUDP {
 
             String receivedText;
             do {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[5000];
 
                 // create datagram packet
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -38,9 +38,14 @@ public class MultiClientServerUDP {
                 receivedText = new String(packet.getData());
                 receivedText = receivedText.trim();
 
+                System.out.println(receivedText);
+
                 // get client's internet "address" and "port" from the hostname from the packet
                 InetAddress address = packet.getAddress();
                 int clientPort = packet.getPort();
+
+                //sending back to client
+                serverSocket.send(packet);
 
                 System.out.println("Client [" + address.getHostAddress() +  ":" + clientPort +"] > " + receivedText);
 
@@ -81,7 +86,7 @@ public class MultiClientServerUDP {
 
         try {
             socket.send(p);
-            System.out.println("Server [" + socket.getLocalAddress().getHostAddress() + "] > " + msg);
+            System.out.println("Server [" + p.getAddress().getHostName() + "] > " + msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
