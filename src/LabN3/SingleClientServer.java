@@ -27,7 +27,7 @@ public class SingleClientServer
             ServerSocket serverSocket = new ServerSocket(serverPort);
             Socket socket = serverSocket.accept();
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
         ) {
             System.out.println("Currency Converter server is running!");
 
