@@ -17,11 +17,8 @@ public class MultiClientServerUDP {
         runServer();
     }
 
-
-
-
-
-    private void runServer() {
+    private void runServer()
+    {
         try (DatagramSocket serverSocket = new DatagramSocket(serverPort)) {
 
             System.out.println("Currency Converter server is running!\n"
@@ -30,8 +27,6 @@ public class MultiClientServerUDP {
             String receivedText;
             do {
                 byte[] buffer = new byte[1024];
-
-
 
                 // create datagram packet
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -49,8 +44,6 @@ public class MultiClientServerUDP {
 
                 System.out.println("Client [" + address.getHostAddress() +  ":" + clientPort +"] > " + receivedText);
 
-
-
                 if(receivedText.equals("curr"))
                 {
                     System.out.println(address + converter.getAllCurrencies());
@@ -67,21 +60,14 @@ public class MultiClientServerUDP {
                         float value = rate * amount;
                         String respons = String.format("%.4f", amount) + " " + fromCurrency + " = "
                                 + String.format("%.4f", value) + " " + toCurrency;
-                        send(out, respons.replace(',','.'));
+                        send(serverSocket, respons.replace(',','.'), packet);
                     }
-                    else send(out, "One or both currencies are not supported!");
+                    else send(serverSocket, "One or both currencies are not supported!", packet);
                 }
-                else send(out, "Unrecognizable or invalid query!");
-
-
-
-
+                else send(serverSocket, "Unrecognizable or invalid query!", packet);
 
             } while (receivedText != null);
-            {
 
-
-            }
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -89,11 +75,18 @@ public class MultiClientServerUDP {
         }
     }
 
-    private void send(PrintWriter pw, String msg)
+    private void send(DatagramSocket socket, String msg, DatagramPacket p)
     {
+        // SENDE TIL CLIENT MED SOCKET
 
-        pw.println(msg);
-        System.out.println("Server [" + packet.getLocalAddress().getHostAddress() + "] > " + msg);
+        try {
+            socket.send(p);
+            System.out.println("Server [" + socket.getLocalAddress().getHostAddress() + "] > " + msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
