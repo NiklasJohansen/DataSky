@@ -9,11 +9,17 @@ public class MultiClientServerUDP {
     private CurrencyConverter converter;
     private QueryParser parser;
 
+
     public MultiClientServerUDP() {
         this.converter = new CurrencyConverter("kursliste.csv");
         this.parser = new QueryParser();
+
         runServer();
     }
+
+
+
+
 
     private void runServer() {
         try (DatagramSocket serverSocket = new DatagramSocket(serverPort)) {
@@ -25,6 +31,8 @@ public class MultiClientServerUDP {
             do {
                 byte[] buffer = new byte[1024];
 
+
+
                 // create datagram packet
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
@@ -34,6 +42,40 @@ public class MultiClientServerUDP {
                 // extract text from the packet
                 receivedText = new String(packet.getData());
                 receivedText = receivedText.trim();
+
+                // get client's internet "address" and "port" from the hostname from the packet
+                InetAddress address = packet.getAddress();
+                int clientPort = packet.getPort();
+
+                System.out.println("Client [" + address.getHostAddress() +  ":" + clientPort +"] > " + receivedText);
+
+
+
+                if(receivedText.equals("curr"))
+                {
+                    System.out.println(address + converter.getAllCurrencies());
+                }
+                else if(parser.parse(receivedText))
+                {
+                    String fromCurrency = parser.getFromCurrency();
+                    String toCurrency = parser.getToCurrency();
+                    float amount = parser.getFromAmount();
+
+                    if(converter.isSupported(fromCurrency) && converter.isSupported(toCurrency))
+                    {
+                        float rate = converter.getRate(fromCurrency, toCurrency);
+                        float value = rate * amount;
+                        String respons = String.format("%.4f", amount) + " " + fromCurrency + " = "
+                                + String.format("%.4f", value) + " " + toCurrency;
+                        send(out, respons.replace(',','.'));
+                    }
+                    else send(out, "One or both currencies are not supported!");
+                }
+                else send(out, "Unrecognizable or invalid query!");
+
+
+
+
 
             } while (receivedText != null);
             {
@@ -47,31 +89,24 @@ public class MultiClientServerUDP {
         }
     }
 
+    private void send(PrintWriter pw, String msg)
+    {
+
+        pw.println(msg);
+        System.out.println("Server [" + packet.getLocalAddress().getHostAddress() + "] > " + msg);
+    }
 
 
 
+    public static void main(String[] args) throws IOException {
 
-    private static class Client extends Thread {
-        private Socket socket;
-        private String address;
+        if (args.length == 1)
+            serverPort = Integer.parseInt(args[0]);
+        else if (args.length > 1)
+            throw new IllegalArgumentException("Usage: SingleClientServer [<serverPort number>]");
 
-        private Client(Socket socket) {
-            this.socket = socket;
-            this.address = socket.getInetAddress().getHostAddress();
-            System.out.println("New client [" + address + "] connected");
-        }
-
-
-        public static void main(String[] args) throws IOException {
-
-            if (args.length == 1)
-                serverPort = Integer.parseInt(args[0]);
-            else if (args.length > 1)
-                throw new IllegalArgumentException("Usage: SingleClientServer [<serverPort number>]");
-
-            new MultiClientServerUDP();
-
+        new MultiClientServerUDP();
 
         }
     }
-}
+
