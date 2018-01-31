@@ -5,7 +5,7 @@ import java.io.*;
 
 public class MultiClientServerUDP {
 
-    private static int serverPort = 25565;
+    private static int serverPort = 55555;
     private CurrencyConverter converter;
     private QueryParser parser;
 
@@ -38,14 +38,20 @@ public class MultiClientServerUDP {
                 receivedText = new String(packet.getData());
                 receivedText = receivedText.trim();
 
-                System.out.println(receivedText);
+                // convert to uppercase
+                String outText = receivedText.toUpperCase();
+
+                // put the processed output text as array of bytes into the buffer
+                buffer = outText.getBytes();
 
                 // get client's internet "address" and "port" from the hostname from the packet
                 InetAddress address = packet.getAddress();
                 int clientPort = packet.getPort();
 
-                //
-                send(serverSocket, "Connect", packet);
+                System.out.println("Client [" + address.getHostAddress() +  ":" + clientPort +"] > " + receivedText);
+
+                // create datagram packet with the uppercase text to send back to the client
+                packet = new DatagramPacket(buffer, buffer.length, address, clientPort);
 
                 //sending back to client
                 serverSocket.send(packet);

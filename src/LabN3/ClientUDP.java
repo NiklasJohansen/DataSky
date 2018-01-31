@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class ClientUDP {
 
-    private static int serverPort = 25565; // Default port to use
+    private static int serverPort = 55555; // Default port to use
     private static String serverAddress = "127.0.0.1";//"158.38.214.22";//"127.0.0.1"; // Default host, localhost
 
     private ClientUDP() {
