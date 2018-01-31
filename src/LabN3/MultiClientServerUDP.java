@@ -44,6 +44,9 @@ public class MultiClientServerUDP {
                 InetAddress address = packet.getAddress();
                 int clientPort = packet.getPort();
 
+                //
+                send(serverSocket, "Connect", packet);
+
                 //sending back to client
                 serverSocket.send(packet);
 
