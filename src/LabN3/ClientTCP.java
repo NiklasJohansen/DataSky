@@ -48,7 +48,7 @@ public class ClientTCP
         }
     }
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args)
     {
         if(args.length == 2)
         {
