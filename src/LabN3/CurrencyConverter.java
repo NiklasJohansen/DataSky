@@ -13,11 +13,9 @@ public class CurrencyConverter
         this.currencies = new HashMap<>();
         this.currencies.put("NOK", 1.0f);
 
-        try
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName))))
         {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName)));
-
-            // Skips the two top row
+            // Skips the two top rows
             reader.readLine();
             reader.readLine();
 
@@ -35,10 +33,6 @@ public class CurrencyConverter
 
                 currencies.put(currency, amountInNOK);
             }
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
         }
         catch (IOException e)
         {
@@ -62,5 +56,4 @@ public class CurrencyConverter
     {
         return Arrays.toString(currencies.keySet().toArray());
     }
-
 }
