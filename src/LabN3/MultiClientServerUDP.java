@@ -16,18 +16,17 @@ public class MultiClientServerUDP {
     }
 
     private void runServer() {
-        try (
-                // create an UDP/datagram socket for server on the given port
-                DatagramSocket serverSocket = new DatagramSocket(serverPort)
+        try (DatagramSocket serverSocket = new DatagramSocket(serverPort)) {
 
-        ) {
+            System.out.println("Currency Converter server is running!\n"
+                    + "Waiting for incoming connections");
+
             String receivedText;
             do {
-                byte[] buf = new byte[1024];
-
+                byte[] buffer = new byte[1024];
 
                 // create datagram packet
-                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
                 // read datagram packet from the socket
                 serverSocket.receive(packet);
@@ -36,35 +35,21 @@ public class MultiClientServerUDP {
                 receivedText = new String(packet.getData());
                 receivedText = receivedText.trim();
 
-                // convert to uppercase
-                String outText = receivedText.toUpperCase();
-
-                // put the processed output text as array of bytes into the buffer
-                buf = outText.getBytes();
-
-                // get client's internet "address" and "port" from the hostname from the packet
-                InetAddress clientAddr = packet.getAddress();
-                int clientPort = packet.getPort();
-
-                System.out.println("Client [" + clientAddr.getHostAddress() + ":" + clientPort + "] > " + receivedText);
-
-                // create datagram packet with the uppercase text to send back to the client
-                packet = new DatagramPacket(buf, buf.length, clientAddr, clientPort);
-
-                // send the uppercase text back to the client
-                serverSocket.send(packet);
-
-                System.out.println("I (Server) [" + InetAddress.getLocalHost() + ":" + serverPort + "] > " + outText);
             } while (receivedText != null);
+            {
 
-            System.out.println("I am done, Bye!");
 
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port "
-                    + serverPort + " or listening for a connection");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
+
+
+
+
 
     private static class Client extends Thread {
         private Socket socket;
