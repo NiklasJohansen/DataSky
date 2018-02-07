@@ -13,7 +13,6 @@ public class ClientUDP
 {
     private static int serverPort = 25565; // Default port to use
     private static String serverAddress = "127.0.0.1";
-
     private ClientUDP()
     {
         runClient();
@@ -23,7 +22,8 @@ public class ClientUDP
     {
 
         System.out.println(serverAddress +" " + serverPort);
-        try (
+        try
+        (
                 DatagramSocket socket = new DatagramSocket(serverPort);
                 BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
         ) {
@@ -34,15 +34,14 @@ public class ClientUDP
 
             System.out.print("Client [" + InetAddress.getLocalHost() + "] > ");
 
-            while ((inText = stdIn.readLine()) != null && !inText.isEmpty()) {
-
+            while ((inText = stdIn.readLine()) != null && !inText.isEmpty())
+            {
                 buf = inText.getBytes();
                 packet = new DatagramPacket(buf, buf.length, address, serverPort);
-
                 socket.send(packet);
 
-                Arrays.fill(buf, (byte) 0);
-
+                buf = new byte[1024];
+                packet = new DatagramPacket(buf, buf.length, address, serverPort);
                 socket.receive(packet);
 
                 String receivedText = new String(packet.getData());
@@ -76,6 +75,7 @@ public class ClientUDP
             System.err.println("Usage: [<address>] [<port>]");
             System.exit(1);
         }
+        
         new ClientUDP();
     }
 }
