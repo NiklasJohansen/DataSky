@@ -1,4 +1,4 @@
-package LabN3;
+package LabN3.tcp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +27,7 @@ public class ClientTCP
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
         ) {
+            System.out.println("Connected to: " + serverAddress + ":" + serverPort);
             System.out.print("Client [" + InetAddress.getLocalHost()+ "] > ");
 
             for (String input; (input = stdIn.readLine()) != null && !input.isEmpty();)

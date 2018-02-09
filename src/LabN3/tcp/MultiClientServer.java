@@ -1,4 +1,7 @@
-package LabN3;
+package LabN3.tcp;
+
+import LabN3.CurrencyConverter;
+import LabN3.QueryParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +18,7 @@ public class MultiClientServer
 
     public MultiClientServer()
     {
-        this.converter = new CurrencyConverter("kursliste.csv");
+        this.converter = new CurrencyConverter("currencies.csv");
         this.parser = new QueryParser();
         runServer();
     }
@@ -97,7 +100,7 @@ public class MultiClientServer
             }
             catch (IOException e)
             {
-                System.out.println("Client [" + address + "] disconnected!");
+                System.out.println("Client [" + address + "] disconnected");
             }
         }
 

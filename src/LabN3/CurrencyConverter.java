@@ -24,9 +24,9 @@ public class CurrencyConverter
             {
                 String[] elements = line.split(",");
 
-                String currency = elements[2];
-                float amount = Float.parseFloat(elements[1]);
-                float amountInNOK = Float.parseFloat(elements[9]);
+                String currency = elements[2].trim();
+                float amount = Float.parseFloat(elements[1].trim());
+                float amountInNOK = Float.parseFloat(elements[9].trim());
 
                 if(amount != 1.0f)
                     amountInNOK /= amount;

@@ -1,4 +1,7 @@
-package LabN3;
+package LabN3.udp;
+
+import LabN3.CurrencyConverter;
+import LabN3.QueryParser;
 
 import java.net.*;
 import java.io.*;
@@ -11,7 +14,7 @@ public class MultiClientServerUDP
 
     public MultiClientServerUDP()
     {
-        this.converter = new CurrencyConverter("kursliste.csv");
+        this.converter = new CurrencyConverter("currencies.csv");
         this.parser = new QueryParser();
         runServer();
     }

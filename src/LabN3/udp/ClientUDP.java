@@ -1,4 +1,4 @@
-package LabN3;
+package LabN3.udp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,12 +7,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 
 public class ClientUDP
 {
     private static int serverPort = 25565; // Default port to use
     private static String serverAddress = "127.0.0.1";
+
     private ClientUDP()
     {
         runClient();
@@ -20,12 +20,12 @@ public class ClientUDP
 
     private void runClient()
     {
-
         System.out.println(serverAddress +" " + serverPort);
+
         try
         (
-                DatagramSocket socket = new DatagramSocket(serverPort);
-                BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
+            DatagramSocket socket = new DatagramSocket(serverPort);
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
         ) {
             String inText;
             InetAddress address = InetAddress.getByName(serverAddress);
@@ -75,7 +75,7 @@ public class ClientUDP
             System.err.println("Usage: [<address>] [<port>]");
             System.exit(1);
         }
-        
+
         new ClientUDP();
     }
 }

@@ -17,9 +17,9 @@ public class QueryParser
 
         try
         {
-            this.fromAmount = Float.parseFloat(elements[0]);
-            this.fromCurrency = elements[1];
-            this.toCurrency = elements[2];
+            this.fromAmount = Float.parseFloat(elements[0].trim());
+            this.fromCurrency = elements[1].trim();
+            this.toCurrency = elements[2].trim();
             return true;
         }
         catch (NumberFormatException e)
